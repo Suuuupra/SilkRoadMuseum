@@ -1,0 +1,510 @@
+/**
+ * 系统应用js
+ * app.js
+ *
+ * @copyright Copyright (c) 2010  
+ * @package fanclub
+ * @subpackage js
+ * @version 2014-04-21
+ */
+//window.UEDITOR_HOME_URL = PUBLIC_URL+'/js/ueditor/';
+
+$(function(){
+	//删除
+	$('a.remove').doRemove({'confirm':'您确定删除吗？'});
+	$('.removeItem').doRemove({'confirm':'您确定取消关注他吗？'});
+	//boxy的弹窗，需要art支持
+	$(".boxy").live('click',function(){
+		var url = $(this).attr('href');
+		url = urlRequest.setParameter( 'format','txt',url );
+		itbeingDialog = art.dialog();
+		$.get(url,function(data){
+			itbeingDialog.content(data);
+		});
+		return false;
+	});
+	//playvideo的弹窗，需要art支持
+	$(".playvideo").live('click',function(){
+		var url = $(this).attr('href');
+		url = urlRequest.setParameter( 'format','txt',url );
+		$.get(url,function(data){
+			 var htmlmessage = data;
+			 $("#video_xxpaly").html(htmlmessage);
+			 $('.video_mask').show();
+			 $('.video_xxx').slideDown(200);
+			 return false;
+		});
+		return false;
+	});
+	//关闭弹窗按钮
+	$('.btn_ben_close,.btn_ben_cancle ').live('click',function(){
+		itbeingDialog.close();
+	});
+	$(".btn_video_close").live('click',function(){
+		$('.video_mask').hide();
+		$('.video_xxx').slideUp(200);
+	})
+	//选择时间
+	$('.sdatetime').live('click',function(){
+		WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})
+	});
+	//选择日期
+	$('.sdate').live('click',function(){
+		WdatePicker();
+	});
+	//高级checkbox
+	$('a.check_box_item').live('click',function(e){
+		e.preventDefault();
+		var c = $(this).attr('class');
+		var v = 0;
+		if(c.indexOf('check_box_ok')>-1){
+			$(this).removeClass('check_box_ok');
+			$(this).addClass('check_box');
+		}else{
+			$(this).removeClass('check_box');
+			$(this).addClass('check_box_ok');
+			v = 1;
+		}
+		$(this).find('input').val(v);
+	});
+	//ajax提交表单
+	$('.ajaxformbtn').click(function(){ });
+	$('.ajaxformbtn').doSubmit({'callback':function(rs){
+		var msg = rs.msg;
+		var icon = null
+		var redirect = rs.redirect;
+
+		if(msg.indexOf('密码重置')>-1 || msg.indexOf('编辑成功')>-1|| msg.indexOf('注册成功')>-1){
+			itbeing.alert(msg);
+			//直接跳转
+			if(redirect){
+				window.location.href = redirect;
+				return false;
+			}
+		}
+		if(msg.indexOf('成功')>-1){
+			//icon = 'succeed';
+			 
+			//直接跳转
+			if(redirect){
+				window.location.href = redirect;
+				return false;
+			}
+		}else{
+			itbeing.alert(msg);
+			return false;
+		}
+		art.dialog({
+			icon: icon,
+			content: '<pre>'+msg+'</pre>',
+			ok: function () {
+				if(msg.indexOf('成功')>-1){
+					var redirect = rs.redirect;
+					if(redirect){
+						window.location.href = redirect;
+					}
+				}
+				return true;
+			},
+			cancel:false,
+		});
+	}});
+	
+	$('.ajaxlogin').doSubmit({'callback':function(rs){
+		var msg = rs.msg;
+		var icon = null
+		var redirect = rs.redirect;
+		 
+		if(msg.indexOf('成功')>-1){
+			//icon = 'succeed';
+			//直接跳转
+			if(redirect){
+				 
+				window.location.href = redirect;
+				return true;
+			}
+		}else{
+			if(msg.indexOf('账户不能为空')>-1 || msg.indexOf('用户不存在，请重试')>-1 ){
+				$(".username").addClass('wrong');
+				$(".password").removeClass('wrong');
+				$(".password").val('');
+			}else if(msg=='密码错误，请重试'){
+				$(".username").removeClass('wrong');
+				$(".password").addClass('wrong');
+				$(".password").val('');
+			}
+			$('#wronginfo').html(msg);
+			return false;
+		}
+		 
+	}});
+
+
+	//html5的placeholder 属性
+	/*$('[placeholder]').focus(function() {
+		var input = $(this);
+		if (input.val() == input.attr('placeholder')) {
+			input.val('');
+			input.removeClass('placeholder');
+		}
+	}).blur(function(){
+		var input = $(this);
+		if (input.val() == '' || input.val() == input.attr('placeholder')) {
+			input.addClass('placeholder');
+			input.val(input.attr('placeholder'));
+		}
+	}).blur();*/
+	//更多的下拉层
+	$('.more_action').hover(
+		function() { 
+			$(this).find('ul.tabs').show();
+			$(this).addClass('current');
+		},
+		function() { 
+			$(this).find('ul.tabs').hide(); 
+			$(this).removeClass('current');
+		}
+	);
+	//表格排序
+	$('a.sort').setFeildSort();
+	//全选操作
+	$('#check').doCheckAll({target:'.checkbox'});
+	//后退返回按钮
+	$('.cancelLink').click(function(){ window.history.go('-1'); });
+	//后退返回按钮
+	$('.histroyBack').click(function(){ window.history.go('-1'); });
+	//多项批量操作选项
+	$('#operateBtn').click(function(){
+		var action = $('#action_type').val();
+		if(action=='remove' || action=='delete' ){
+			if( !(itbeing.confirm('确定删除吗？') ) ) return false;
+		}
+		var isChecked = false;
+		$('.checkbox').each(function(){
+			if($(this).attr('checked')){ 
+				isChecked = true;
+			}
+		});
+		if(!isChecked){ 
+			itbeing.alert('请选择操作条目！');
+			return false;
+		}
+		$('#listForm').submit();
+	});
+	$('textarea.editor').each(function(index, element) {
+		var id = $(element).attr('id');
+		UE.getEditor(id,{wordCount:false,initialFrameWidth:650,elementPathEnabled:false,focus:true,initialContent:''});
+    });
+});
+//显示进度条
+function show_progress(){
+	var offsetTop = $(window).scrollTop();
+	if(offsetTop>0)$('#progress').css({top:offsetTop+'px'});
+	$('#progress').show();
+}
+
+//隐藏进度条
+function hide_progress(){
+	$('#progress').hide();
+}
+
+//弹出
+$(document).ready(function($){
+
+	$('.theme-forget-k').click(function(){
+		$('.theme-popover-forget').show();
+		$('.theme-popover-mask2').hide();
+		$('.theme-popover2').hide();
+		$('.theme-popover-forget').height($(document).height());
+		$('.theme-forget').slideDown(200);
+	})
+	$('.theme-forget1 .close').click(function(){
+		$('.theme-popover-forget').hide();
+		$('.theme-forget').slideUp(200);
+	})
+	 
+	 
+});
+$(function(){
+	//回复
+	$('.xie').live('click',function(e){
+		var belong_id = $(this).attr('belong_id');
+		if($("#fr_"+belong_id).css('display')=='none'){
+			$(".buyers_da").each(function(){
+				if($(this).css('display')=='block'){
+					$(this).slideUp(500);	
+				}
+			})
+			$("#fr_"+belong_id).slideDown(1000);
+		}else{
+			$("#fr_"+belong_id).slideUp(1000);	
+		}
+		
+	});	 	
+		
+});
+function checkLogin(){
+	if(userId>0){
+		return true;
+	}
+	$('.theme-popover-mask2').show();
+	$('.theme-popover-mask2').height($(document).height());
+	$('.theme-popover2').slideDown(200);
+	return false;
+}
+$(function(){
+	$(".xiepage").live('blur',function(){
+		var page = $(this).val();
+		var url = $(this).attr('belong');
+		url = url+"&page="+page;
+		//url = urlRequest.setParameter( 'format','html',url );
+		$.get(url,function(rs){
+			  var htmlex = $(rs).find('#web_searchdiv').html();
+			 $('#web_searchdiv').html(htmlex);	
+		});
+	})
+	$(".ajaxsearch").live('click',function(e){
+		 e.preventDefault();
+		var url = $(this).attr('href');
+		if(url!='#'){
+			//url = urlRequest.setParameter( 'format','html',url );
+			$.get(url,function(rs){
+				  var htmlex = $(rs).find('#web_searchdiv').html();
+				 $('#web_searchdiv').html(htmlex);	
+			});
+		}
+	});
+	//ajax搜索
+	$('.ajaxform').live('submit',function(e){
+		e.preventDefault();
+		var url =  BASE_URL+"/?c=usersold&a=index";
+		var data = $(this).serialize(); 
+		 if($("._keyword").val()!='结果中搜索'){
+			itbeing.ajaxRequest({url:url,method:"POST",dataType:'html',callback:function(rs){		
+				 var htmlex = $(rs).find('#staruserdiv').html();
+				 $('#staruserdiv').html(htmlex);
+				
+			}},data); 
+		 }
+		return false;
+	});
+	//粉丝流点赞
+	$(".shou").live('click',function(){
+		if(userId){
+			var belong_id = $(this).attr('belong_id');
+			var url = BASE_URL+'/?c=mblogs&a=support&user_id='+userId+'&format=json&id='+belong_id;
+			$.getJSON(url,function(rs){
+				if(rs.msg.indexOf('成功')>-1){
+				 $(".favorites_"+belong_id).html(Number($(".favorites_"+belong_id).html())+1);
+				}else{
+					itbeing.alert(rs.msg);
+				}
+			});
+		}
+		
+	});
+
+	//点击用户连接，判断
+	$(".user_view").live('click',function(){
+		var obj = $(this);
+		var href = $(this).attr('href');
+		var belong_id = $(this).attr('belong_id');
+		var belong = $(this).attr('belong');
+		if(userId){
+			var url = BASE_URL+'/?c=usersold&a=checkbuystar&format=json&user_id='+belong_id;
+			$.getJSON(url,function(rs){
+				 if(rs.msg==true){
+					 window.location.href = href;
+				 }else{
+					 if(belong=='album'){
+					    window.location.href = BASE_URL+"/?c=usersold&a=index";
+						return false;
+					 }
+					 checkmoney(obj,belong_id);
+					 return false; 
+				 }
+			});
+			return false;
+
+		}else{
+			/*var url = BASE_URL+'/?c=usersold&a=checkbuystar&format=json&user_id='+belong_id;
+			$.getJSON(url,function(rs){
+				 if(rs.msg==true){
+					 window.location.href = href;
+				 }else{
+					checkLogin();
+					 return false; 
+				 }
+			});*/
+			checkLogin();
+			return false;
+		}
+	});
+	$(".payment").live('click',function(){
+		var url = $(this).attr('href');
+		if(url!='#'){
+			url = urlRequest.setParameter( 'format','json',url );
+			$.getJSON(url,function(rs){
+				var msg = rs.msg;
+				var redirect = rs.redirect;
+				if(msg.indexOf('成功')>-1){
+					//直接跳转
+					if(redirect){
+						itbeing.alert(msg);
+						window.location.href = redirect;
+						return false;
+					}
+				}else{
+					itbeing.alert(msg);
+					return false;
+				}  
+			});
+		}
+		return false;
+	})
+
+		
+});
+/*计算会员费用
+	参数：obj点击的对象，uid明星的id
+*/
+ function checkmoney(obj,uid){
+	var url = BASE_URL+'/?c=usersold&a=statistical&star_user_id='+uid;
+	$.get(url,function(data){
+		var htmlex = $(data).find('#popfees').html();
+		$("#popdiv").html(htmlex);
+		$('.theme-popover-mask4').show();
+		$('.theme-popover-mask4').height($(document).height());
+		$('.theme-popover4').slideDown(200);
+	});
+}
+
+//全选购买明星
+$(function(){
+   
+   
+	$(".buystar").live('click',function(){
+		if(userId){
+			var suid = '';
+			$(".star_checkbox").each(function(){		 
+				if($(this).attr('checked')=='checked'){
+					suid+=$(this).val()+',';
+				}
+			});
+			
+			 suid = suid.substring(0,Number(suid.length)-1);
+			if(suid){
+				var url = BASE_URL+'/?c=usersold&a=statistical&star_user_id='+suid;
+				$.get(url,function(data){
+					var htmlex = $(data).find('#popfees').html();
+					$("#popdiv").html(htmlex);
+					$('.theme-popover-mask4').show();
+					$('.theme-popover-mask4').height($(document).height());
+					$('.theme-popover4').slideDown(200);
+				});
+			}else{
+				$('.theme-popover-mask7').show();
+				$('.theme-popover-mask7').height($(document).height());
+				$('.theme-popover7').slideDown(200);
+			}
+		}else{
+			checkLogin();
+		}
+		
+	});
+
+	
+})		
+ //判断明星是否购买
+ function starcheckall(belong_id){ 
+		var href = BASE_URL+'/?c=usersold&a=view&user_id='+belong_id;
+		if(userId){
+			var url = BASE_URL+'/?c=usersold&a=checkbuystar&format=json&user_id='+belong_id;
+			$.getJSON(url,function(rs){
+				 if(rs.msg==true){					 
+					 window.location.href = href;
+					
+				 } else{
+					 return false;
+				 }
+			});
+		}else{
+			checkLogin();
+			return false;
+		}
+	}
+
+ 
+/*发私信
+	参数：obj点击的对象，uid收件人id
+*/
+ function addmessages(obj,uid){
+	var url = BASE_URL+'/?c=messages&a=add&user_id='+uid;
+	$.get(url,function(data){
+		var htmlmessage = $(data).find('#messagediv').html();
+		$("#add_mssage").html(htmlmessage);
+		$('.theme-popover-mask6').show();
+		$('.theme-popover-mask6').height($(document).height());
+		$('.theme-popover6').slideDown(200);
+	});
+}
+
+
+
+
+
+ 
+$(function(){
+	$(".pas").live('focus',function(){	
+		if($(".pas_txt").html()){
+			$(".pas_txt").slideUp(200);
+			$(".pas_txt").html('');
+		}
+		if($(".name_txt").html()){
+			$(".name_txt").slideUp(200);
+			$(".name_txt").html('');
+		}
+		if($(".nickname_txt").html()){
+			$(".nickname_txt").slideUp(200);
+			$(".nickname_txt").html('');
+		}
+	});
+	$(".name").live('focus',function(){	
+
+		if($(".pas_txt").html()){
+			$(".pas_txt").slideUp(200);
+			$(".pas_txt").html('');
+		}
+		if($(".name_txt").html()){
+			$(".name_txt").slideUp(200);
+			$(".name_txt").html('');
+		}
+		if($(".nickname_txt").html()){
+			$(".nickname_txt").slideUp(200);
+			$(".nickname_txt").html('');
+		}
+	});
+	$(".nickname").live('focus',function(){	
+
+		if($(".pas_txt").html()){
+			$(".pas_txt").slideUp(200);
+			$(".pas_txt").html('');
+		}
+		if($(".name_txt").html()){
+			$(".name_txt").slideUp(200);
+			$(".name_txt").html('');
+		}
+		if($(".nickname_txt").html()){
+			$(".nickname_txt").slideUp(200);
+			$(".nickname_txt").html('');
+		}
+	});
+ 
+
+})
+
+ 
+
+
+ 
+	

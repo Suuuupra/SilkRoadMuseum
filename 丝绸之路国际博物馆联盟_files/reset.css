@@ -1,0 +1,371 @@
+ /*防止用户自定义背景颜色对网页的影响，添加让用户可以自定义字体 */
+html {
+    color: #434343;
+    background: white;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+/* 内外边距通常让各个浏览器样式的表现位置不同 */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    margin: 0;
+    padding: 0;
+}
+
+/* 重设 HTML5 标签, IE 需要在 js 中 createElement(TAG) */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+/* HTML5 媒体文件跟 img 保持一致 */
+audio, canvas, video {
+    display: inline-block; 
+    *display: inline;
+    *zoom: 1;
+}
+img {
+    vertical-align: middle;
+}
+/* 要注意表单元素并不继承父级 font 的问题 */
+body, button, input, select, textarea {
+    font: 12px/1.5 "Lantinghei SC",  "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif, \5b8b\4f53;
+}
+input, select, textarea {
+    font-size: 100%;
+    outline:none;
+}
+
+/* 去掉各Table  cell 的边距并让其边重合 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* IE bug fixed:th 不继承 text-align */
+th {
+    text-align: inherit;
+}
+
+/* 去除默认边框 */
+fieldset, img {
+    border: 0;
+}
+
+/* ie6 7 8(q) bug 显示为行内表现 */
+iframe {
+    display: block;
+}
+
+/* 去掉 firefox 下此元素的边框 */
+abbr, acronym {
+    border: 0;
+    font-variant: normal;
+}
+
+/* 一致的 del 样式 */
+del {
+    text-decoration: line-through;
+}
+address, caption, cite, code, dfn, em, th, var {
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* 去掉列表前的标识, li 会继承 */
+ol, ul{
+    list-style: none;
+}
+
+/* 对齐是排版最重要的因素, 别让什么都居中 */
+caption, th {
+    text-align: left;
+}
+
+/* 来自yahoo, 让标题都自定义, 适应多个系统应用 */
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+    font-weight: 500;
+}
+q:before, q:after {
+    content: '';
+}
+
+/* 统一上标和下标 */
+sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
+
+/* 正常链接 未访问 */
+/* a:link {
+        color: #08c;
+}
+*/
+
+/* 鼠标悬停 */
+
+a:hover {
+    color: #000000;
+    text-decoration: none;
+    outline: none;
+}
+a,a:hover,a:active,a:link,a:visited{
+    outline: none;
+    text-decoration: none;
+}
+a { color: #000000; }
+/* 默认不显示下划线，保持页面简洁 */
+ins, a {
+    text-decoration: none;
+}
+
+/* 代码字体 */
+code, kbd, pre, samp {
+    font-family: monospace, serif;
+    font-size: 1em;
+}
+
+
+
+
+/* 清理浮动 */
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+.clearfix {
+    zoom: 1; /* for IE6 IE7 */
+}
+
+/* 隐藏, 通常用来与 JS 配合 */
+body .fn-hide {
+    display: none;
+}
+
+/**/
+div, dl ,dt, dd{
+    box-sizing: border-box;
+}
+
+
+/* 设置内联, 减少浮动带来的bug */
+.fn-left, .fn-right {
+    display: inline;
+}
+.fn-left {
+    float: left;
+}
+.fn-right {
+    float: right;
+}
+
+/*文字居中，居左，居右*/
+.fn-tc{
+    text-align: center;
+}
+.fn-tl{
+    text-align: left;
+}
+.fn-tr{
+    text-align: right;
+}
+/* 单行文字溢出时出现省略号，需设定宽度 */
+.fn-text-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.fn-hide {
+	overflow: hidden;
+}
+button{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+
+
+
+
+/* flex布局 */
+
+.flex_v{-webkit-box-orient:vertical;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;}
+.flex_1{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;}
+.flex_3{-webkit-box-flex:3;-webkit-flex:3;-ms-flex:1;flex:3;}
+.flex_align_center{-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;}
+.flex_align_end{-webkit-box-align:end;-webkit-align-items:end;-ms-flex-align:end;align-items:end;}
+
+.flex_pack_center{-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;}
+.flex_pack_justify{-webkit-box-pack:justify;-webkit-justify-content:space-between;-ms-flex-pack:justify;justify-content:space-between;}
+.flex_pack_end{
+  -webkit-box-pack:end;
+  -webkit-justify-content:flex-end;
+  -ms-flex-pack:end;
+  justify-content:flex-end;
+}
+
+/*.flex{
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:-ms-flexbox;
+  display:flex;
+}*/
+
+
+/* 顺序不能写错 否则不兼容iphone6s */
+.flex{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: box;
+  display: flex;
+  display: block\9;
+}
+
+.flex>*{
+    display: block\9;
+    float: left\9;
+}
+
+.flex_wrap{
+  flex-wrap:wrap;
+  -webkit-flex-wrap:wrap;
+}
+
+.flex_start{
+   align-content: flex-start;
+   -webkit-align-content: flex-start;
+}
+
+.space_around{
+  -webkit-justify-content:space-around;
+  justify-content:space-around;
+}
+
+
+
+.fl{
+    float: left;
+}
+
+.fr{
+    float: right;
+}
+
+.flex>*.ie_Cb{
+    display: none;
+    float: none;
+    clear: both\9;
+    display: block\9;
+    overflow: hidden\9;
+    visibility: hidden\9;
+    width: 0px\9;
+    height: 0px\9;    
+}
+
+.ie_clearfix:after{
+  content: '';
+  display: none;
+  clear: both\9;
+  display: block\9;
+  overflow: hidden\9;
+  visibility: hidden\9;
+  width: 0px\9;
+  height: 0px\9;
+}
+
+
+
+
+/*----------------------------------------------------------------- loading ---------------------------------------------*/
+
+.loading{
+    width: 100%;
+    height: 100%;
+    background: #000;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9000;
+}
+
+.loadWrp{
+    width: 283px;
+    height: 212px;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.loadWrp dt{
+    width: 100%;
+    height: auto;
+}
+
+.loadWrp dt img{
+    width: 100%;
+}
+
+.loadWrp dd{
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    margin: -80px 0 0;
+}
+
+        
+@media (max-width: 767px) {
+
+
+    .loading{
+        width: 100%;
+        height: 100%;
+        background: #000;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9000;
+    }
+
+    .loadWrp{
+        width: 4rem;
+        height: 3rem;
+        margin: auto;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .loadWrp dt{
+        width: 100%;
+        height: auto;
+    }
+
+    .loadWrp dd{
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
+        margin: -.88rem 0 0;
+    }
+
+}
+
+

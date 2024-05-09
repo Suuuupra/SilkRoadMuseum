@@ -1,0 +1,188 @@
+
+	
+$(window).ready(function(){
+
+	//判断pc或手机
+    function IsPC() {
+        var userAgentInfo = navigator.userAgent;
+        var Agents = ["Android", "iPhone",
+                    "SymbianOS", "Windows Phone",
+                    "iPad", "iPod"];
+        var flag = true;
+        for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+    var flag = IsPC();
+    if (flag==false) {
+      //字体自适应
+      !function(a){function b(){var b=g.getBoundingClientRect().width;a.rem=(b/7.5>100?100:(b/7.5<300/7.5?300/7.5:b/7.5)),g.style.fontSize=a.rem+"px"}var g=a.document.documentElement,e;a.addEventListener("resize",function(){clearTimeout(e),e=setTimeout(b,300)},!1),a.addEventListener("pageshow",function(a){a.persisted&&(clearTimeout(e),e=setTimeout(b,300))},!1),b()}(window);
+    
+
+      //侧边栏
+      var slideNavW = $('.slideNav').height();
+      var headerH = $('.header').height();
+
+      $('.aNavPhone').on('click',function(e){
+        e.stopPropagation();
+        if($('.aMobs').hasClass('aMobsOn')){
+          $('.aMobs').removeClass('aMobsOn');
+          $('.layerSearch').animate({ top: -headerH-20+'px'}, 20);
+          $('.layerSearch').find('a').removeClass('slideNavOn');
+        }
+
+        if($(this).hasClass('aNavOn')){
+          $(this).removeClass('aNavOn');
+          $('.slideNav').animate({ top: -slideNavW+'px'}, 300);
+          slideRemoveAni();
+        }else{
+          //显示侧边栏
+          $(this).addClass('aNavOn');
+          $('.slideNav').animate({ top: headerH+'px'}, 300);
+          $('.slideNav').find('a').removeClass('slideNavOn');
+          $('.slideNav').find('a').eq(0).addClass('slide_ani_1');
+          $('.slideNav').find('a').eq(1).addClass('slide_ani_2');
+          $('.slideNav').find('a').eq(2).addClass('slide_ani_3');
+          $('.slideNav').find('a').eq(3).addClass('slide_ani_4');
+          $('.slideNav').find('a').eq(4).addClass('slide_ani_5');
+          $('.slideNav').find('a').eq(5).addClass('slide_ani_6');
+          $('.slideNav').find('a').eq(6).addClass('slide_ani_7');
+          $('.slideNav').find('a').eq(7).addClass('slide_ani_8');
+          $('.slideNav').find('a').eq(8).addClass('slide_ani_9');      
+        }
+      });
+
+      //移除侧边栏动画
+      function slideRemoveAni(){
+          $('.slideNav').find('a').eq(0).removeClass('slide_ani_1');
+          $('.slideNav').find('a').eq(1).removeClass('slide_ani_2');
+          $('.slideNav').find('a').eq(2).removeClass('slide_ani_3');
+          $('.slideNav').find('a').eq(3).removeClass('slide_ani_4');
+          $('.slideNav').find('a').eq(4).removeClass('slide_ani_5');
+          $('.slideNav').find('a').eq(5).removeClass('slide_ani_6');
+          $('.slideNav').find('a').eq(6).removeClass('slide_ani_7');
+          $('.slideNav').find('a').eq(7).removeClass('slide_ani_8');
+          $('.slideNav').find('a').eq(8).removeClass('slide_ani_9');   
+      }
+
+      //侧边栏
+      $(document).on('click touchStart',function(){
+        if($('.aNavPhone').hasClass('aNavOn')){
+          $('.aNavPhone').removeClass('aNavOn');
+          $('.slideNav').animate({ top: -slideNavW+'px'}, 300);
+          slideRemoveAni();
+        }
+        if($('.aMobs').hasClass('aMobsOn')){
+          $('.aMobs').removeClass('aMobsOn');
+          $('.layerSearch').animate({ top: -headerH-20+'px'}, 300);
+          $('.layerSearch').find('a').removeClass('slideNavOn');
+        }
+      });
+    
+      // $('.slideNav').on('click',function(e){
+      //   $('.slideNav').stop();
+      // },true);
+
+      $('.layerSearch').on('click',function(e){
+        e.stopPropagation();
+        return false;
+      });
+
+
+      $('.aMobs').on('click',function(e){
+        e.stopPropagation();
+        if($('.aNavPhone').hasClass('aNavOn')){
+          $('.aNavPhone').removeClass('aNavOn');
+          $('.slideNav').animate({ top: -slideNavW+'px'}, 20);
+          slideRemoveAni();
+        }
+        if($(this).hasClass('aMobsOn')){
+          $(this).removeClass('aMobsOn');
+          $('.layerSearch').animate({ top: -headerH-20+'px'}, 300);
+          $('.layerSearch').find('a').removeClass('slideNavOn');
+        }else{
+          $(this).addClass('aMobsOn');
+          $('.layerSearch').animate({ top: headerH+'px'}, 300);
+        }
+      });
+
+    }
+
+
+
+    //监控滚动
+    $(window).scroll(function() {
+      var scrollTop = $(document).scrollTop();
+      var firstScreen  =  window.screen.availHeight;
+      var banH = $('.skrollable').height();
+      //顶部悬浮导航栏
+      if(scrollTop>firstScreen-180){
+        $('.headerWrp').addClass('headPos');
+      }else{
+        $('.headerWrp').removeClass('headPos');
+      }
+
+      if($('.banner_section').length>=1){                 //首页banner
+          //1
+          // var h = 148 - scrollTop;
+          // $('.skrollable').animate({
+          //       top: h+'px'
+          // },30);
+
+          //2
+          var eachH = 620/100;
+          var px = scrollTop>620?100:scrollTop/eachH;
+          var ele = document.querySelector(".skrollable");
+          console.log(scrollTop);
+
+          setTimeout(function(){
+            ele.style.transform='translate(0px,-'+px+'px)';
+          },30);
+      }
+
+
+      if($('.subBan_section').length>=1){                 //二级页banner
+          var eachH = 355/50;
+          var px = scrollTop>355?100:scrollTop/eachH;
+          var subBan = document.querySelector(".subBan");
+
+          var eachH2 = 355/100;
+          var px2 = scrollTop>355?100:scrollTop/eachH2;
+          var shamo = document.querySelector(".subshamo");
+          var h = 345 - px2;
+
+          setTimeout(function(){
+            subBan.style.transform='translate(0px,-'+px+'px)';
+            shamo.style.transform='translate(0px,-'+px2+'px)';
+            // $('.subshamo').animate({
+            //     top: h+'px'
+            // },10);
+            
+          },30);
+      }
+
+      if($('.perBan_section').length>=1){                 //个人中心、站内信
+          var eachH = 220/50;
+          var px = scrollTop>220?100:scrollTop/eachH;
+          var subBan = document.querySelector(".perBan");
+
+          setTimeout(function(){
+            subBan.style.transform='translate(0px,-'+px+'px)';
+          },30);
+      }
+
+    });
+
+
+
+
+
+
+
+
+
+});    
